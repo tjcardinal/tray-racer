@@ -9,6 +9,18 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       devShells.${system}.default =
-        pkgs.mkShell { buildInputs = with pkgs; [ cargo rustc ]; };
+        pkgs.mkShell { buildInputs = with pkgs; [
+	  cargo
+	  clippy
+	  rustc 
+	  rustfmt
+	  (vscode-with-extensions.override {
+	    vscode = vscodium;
+	    vscodeExtensions = with vscode-extensions; [
+	      asvetliakov.vscode-neovim
+	      rust-lang.rust-analyzer
+	    ];
+	  })
+	]; };
     };
 }
