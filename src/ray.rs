@@ -1,4 +1,4 @@
-use crate::{color::Color, point3::Point3, vec3::Vec3, hittable::Hittable};
+use crate::{color::Color, hittable::Hittable, point3::Point3, vec3::Vec3};
 
 #[derive(Debug)]
 pub struct Ray {
@@ -8,10 +8,7 @@ pub struct Ray {
 
 impl Ray {
     pub fn new(origin: Point3, direction: Vec3) -> Self {
-        Self {
-            origin,
-            direction,
-        }
+        Self { origin, direction }
     }
 
     pub fn at(&self, t: f64) -> Point3 {
@@ -36,7 +33,7 @@ pub fn ray_color(r: &Ray, world: &Vec<Box<dyn Hittable>>) -> Color {
     if let Some(rec) = world.hit(r, 0.0, f64::INFINITY) {
         0.5 * (rec.normal + Color::new(1.0, 1.0, 1.0))
     } else {
-        let unit_direction = r.direction.unit_vector();    
+        let unit_direction = r.direction.unit_vector();
         let t = 0.5 * (unit_direction.y + 1.0);
         (1.0 - t) * Color::new(1.0, 1.0, 1.0) + t * Color::new(0.5, 0.7, 1.0)
     }

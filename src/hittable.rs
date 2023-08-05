@@ -1,4 +1,4 @@
-use crate::{ray::Ray, point3::Point3, vec3::Vec3};
+use crate::{point3::Point3, ray::Ray, vec3::Vec3};
 
 pub struct HitRecord {
     pub p: Point3,
@@ -15,7 +15,11 @@ impl HitRecord {
             p,
             t,
             front_face,
-            normal: if front_face {outward_normal} else {-outward_normal},
+            normal: if front_face {
+                outward_normal
+            } else {
+                -outward_normal
+            },
         }
     }
 }
@@ -25,13 +29,15 @@ pub trait Hittable {
 
 impl Hittable for &Vec<Box<dyn Hittable>> {
     fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
-        self.iter().fold((None, t_max), |(rec, closest), item|{
-            if let Some(rec) = item.hit(r, t_min, closest) {
-                let t = rec.t;
-                (Some(rec), t)
-            } else {
-                (rec, closest)
-            }
-        }).0
+        self.iter()
+            .fold((None, t_max), |(rec, closest), item| {
+                if let Some(rec) = item.hit(r, t_min, closest) {
+                    let t = rec.t;
+                    (Some(rec), t)
+                } else {
+                    (rec, closest)
+                }
+            })
+            .0
     }
 }
