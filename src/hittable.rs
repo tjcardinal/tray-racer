@@ -1,4 +1,4 @@
-use crate::{point3::Point3, ray::Ray, vec3::Vec3};
+use crate::{interval::Interval, point3::Point3, ray::Ray, vec3::Vec3};
 
 pub struct HitRecord {
     pub p: Point3,
@@ -24,14 +24,15 @@ impl HitRecord {
     }
 }
 pub trait Hittable {
-    fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>;
+    fn hit(&self, r: &Ray, ray_t: Interval) -> Option<HitRecord>;
 }
 
 impl Hittable for &Vec<Box<dyn Hittable>> {
-    fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
+    fn hit(&self, r: &Ray, ray_t: Interval) -> Option<HitRecord> {
         self.iter()
-            .fold((None, t_max), |(rec, closest), item| {
-                if let Some(rec) = item.hit(r, t_min, closest) {
+            .fold((None, ray_t.max), |(rec, closest), item| {
+                let interval = Interval::new(ray_t.min, closest);
+                if let Some(rec) = item.hit(r, interval) {
                     let t = rec.t;
                     (Some(rec), t)
                 } else {

@@ -1,5 +1,6 @@
 mod color;
 mod hittable;
+mod interval;
 mod point3;
 mod ray;
 mod sphere;
