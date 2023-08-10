@@ -1,4 +1,4 @@
-use crate::{color::Color, hittable::Hittable, interval::Interval, point3::Point3, vec3::Vec3};
+use crate::{point3::Point3, vec3::Vec3};
 
 #[derive(Debug)]
 pub struct Ray {
@@ -26,16 +26,5 @@ fn hit_sphere(center: Point3, radius: f64, r: &Ray) -> Option<f64> {
         None
     } else {
         Some((-half_b - discriminant.sqrt()) / a)
-    }
-}
-
-pub fn ray_color(r: &Ray, world: &Vec<Box<dyn Hittable>>) -> Color {
-    let interval = Interval::new(0.0, f64::INFINITY);
-    if let Some(rec) = world.hit(r, interval) {
-        0.5 * (rec.normal + Color::new(1.0, 1.0, 1.0))
-    } else {
-        let unit_direction = r.direction.unit_vector();
-        let t = 0.5 * (unit_direction.y + 1.0);
-        (1.0 - t) * Color::new(1.0, 1.0, 1.0) + t * Color::new(0.5, 0.7, 1.0)
     }
 }

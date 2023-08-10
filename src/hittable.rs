@@ -27,7 +27,7 @@ pub trait Hittable {
     fn hit(&self, r: &Ray, ray_t: Interval) -> Option<HitRecord>;
 }
 
-impl Hittable for &Vec<Box<dyn Hittable>> {
+impl Hittable for Vec<Box<dyn Hittable>> {
     fn hit(&self, r: &Ray, ray_t: Interval) -> Option<HitRecord> {
         self.iter()
             .fold((None, ray_t.max), |(rec, closest), item| {
