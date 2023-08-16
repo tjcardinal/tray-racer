@@ -10,6 +10,7 @@ use crate::{
 pub struct Camera {
     pub aspect_ratio: f64,
     pub width: i32,
+    pub samples_per_pixel: i32,
     height: i32,
     center: Point3,
     pixel00_loc: Point3,
@@ -22,6 +23,7 @@ impl Camera {
         Self {
             aspect_ratio: 1.0,
             width: 100,
+            samples_per_pixel: 10,
             height: 100,
             center: Point3::new(0.0, 0.0, 0.0),
             pixel00_loc: Point3::new(0.0, 0.0, 0.0),
@@ -37,14 +39,12 @@ impl Camera {
         for y in 0..self.height {
             eprintln!("Scanlines remaining :{}", self.height - y);
             for x in 0..self.width {
-                let pixel_center = self.pixel00_loc
-                    + (x as f64 * self.pixel_delta_u)
-                    + (y as f64 * self.pixel_delta_v);
-                let ray_direction = pixel_center - self.center;
-                let r = Ray::new(self.center, ray_direction);
-
-                let pixel_color = Self::ray_color(&r, world);
-                color::write_color(pixel_color);
+                let mut pixel_color = Color::new(0.0, 0.0, 0.0);
+                for _ in 0..self.samples_per_pixel {
+                    let r = self.get_ray(x, y);
+                    pixel_color = pixel_color + Self::ray_color(&r, world);
+                }
+                color::write_color(pixel_color, self.samples_per_pixel);
             }
         }
         eprintln!("Done");
@@ -86,5 +86,21 @@ impl Camera {
             let t = 0.5 * (unit_direction.y + 1.0);
             (1.0 - t) * Color::new(1.0, 1.0, 1.0) + t * Color::new(0.5, 0.7, 1.0)
         }
+    }
+
+    fn get_ray(&self, x: i32, y: i32) -> Ray {
+        let pixel_center =
+            self.pixel00_loc + (x as f64 * self.pixel_delta_u) + (y as f64 * self.pixel_delta_v);
+        let pixel_sample = pixel_center + self.pixel_sample_square();
+
+        let ray_origin = self.center;
+        let ray_direction = pixel_sample - ray_origin;
+        Ray::new(ray_origin, ray_direction)
+    }
+
+    fn pixel_sample_square(&self) -> Vec3 {
+        let px = -0.5 + rand::random::<f64>();
+        let py = -0.5 + rand::random::<f64>();
+        px * self.pixel_delta_u + py * self.pixel_delta_v
     }
 }
