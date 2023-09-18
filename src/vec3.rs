@@ -9,6 +9,8 @@ pub struct Vec3 {
     pub z: f64,
 }
 
+pub type Point3 = crate::vec3::Vec3;
+
 impl Vec3 {
     pub fn new(x: f64, y: f64, z: f64) -> Self {
         Self { x, y, z }
@@ -32,6 +34,11 @@ impl Vec3 {
 
     pub fn length_squared(self) -> f64 {
         self.x.powi(2) + self.y.powi(2) + self.z.powi(2)
+    }
+    
+    pub fn near_zero(self) -> bool {
+        let s = 1e-8;
+        (self.x.abs() < s) && (self.y.abs() < s) && (self.z.abs() < s)
     }
 
     pub fn unit_vector(self) -> Self {
@@ -74,6 +81,10 @@ impl Vec3 {
         } else {
             -on_unit_sphere
         }
+    }
+    
+    pub fn reflect(v: Self, n: Self) -> Self {
+        v - 2.0 * v.dot(n) * n
     }
 }
 
