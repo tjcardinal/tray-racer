@@ -1,17 +1,17 @@
-use crate::{hittable::HitRecord, ray::Ray, color::Color, vec3::Vec3};
+use crate::{color::Color, hittable::HitRecord, ray::Ray, vec3::Vec3};
 
 pub trait Material {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)>;
 }
 
 pub struct Lambertain {
-    pub albedo: Color
+    pub albedo: Color,
 }
 
 impl Material for Lambertain {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
         let mut scatter_direction = rec.normal + Vec3::random_unit_vector();
-        
+
         if scatter_direction.near_zero() {
             scatter_direction = rec.normal;
         }
@@ -21,7 +21,7 @@ impl Material for Lambertain {
 }
 
 pub struct Metal {
-    pub albedo: Color
+    pub albedo: Color,
 }
 
 impl Material for Metal {

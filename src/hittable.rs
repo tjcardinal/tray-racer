@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use crate::{interval::Interval, vec3::Point3, ray::Ray, vec3::Vec3, material::Material};
+use crate::{interval::Interval, material::Material, ray::Ray, vec3::Point3, vec3::Vec3};
 
 pub struct HitRecord {
     pub p: Point3,

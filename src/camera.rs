@@ -2,8 +2,8 @@ use crate::{
     color::{self, Color},
     hittable::Hittable,
     interval::Interval,
-    vec3::Point3,
     ray::Ray,
+    vec3::Point3,
     vec3::Vec3,
 };
 
@@ -85,9 +85,8 @@ impl Camera {
         }
         let interval = Interval::new(0.001, f64::INFINITY);
         if let Some(rec) = world.hit(r, interval) {
-            
             if let Some((attenuation, scattered)) = rec.mat.scatter(r, &rec) {
-                attenuation * Camera::ray_color(&scattered, depth-1, world)
+                attenuation * Camera::ray_color(&scattered, depth - 1, world)
             } else {
                 Color::new(0.0, 0.0, 0.0)
             }

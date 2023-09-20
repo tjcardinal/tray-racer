@@ -35,7 +35,7 @@ impl Vec3 {
     pub fn length_squared(self) -> f64 {
         self.x.powi(2) + self.y.powi(2) + self.z.powi(2)
     }
-    
+
     pub fn near_zero(self) -> bool {
         let s = 1e-8;
         (self.x.abs() < s) && (self.y.abs() < s) && (self.z.abs() < s)
@@ -82,7 +82,7 @@ impl Vec3 {
             -on_unit_sphere
         }
     }
-    
+
     pub fn reflect(v: Self, n: Self) -> Self {
         v - 2.0 * v.dot(n) * n
     }
