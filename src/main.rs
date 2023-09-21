@@ -12,23 +12,15 @@ use std::rc::Rc;
 use camera::Camera;
 use color::Color;
 use hittable::Hittable;
-use material::{Lambertain, Material, Metal};
+use material::{Dielectric, Lambertain, Material, Metal};
 use sphere::Sphere;
 use vec3::Point3;
 
 fn main() {
-    let material_ground = Rc::new(Lambertain {
-        albedo: Color::new(0.8, 0.8, 0.0),
-    });
-    let material_center = Rc::new(Lambertain {
-        albedo: Color::new(0.7, 0.3, 0.3),
-    });
-    let material_left = Rc::new(Metal {
-        albedo: Color::new(0.8, 0.8, 0.8),
-    });
-    let material_right = Rc::new(Metal {
-        albedo: Color::new(0.8, 0.6, 0.2),
-    });
+    let material_ground = Rc::new(Lambertain::new(Color::new(0.8, 0.8, 0.0)));
+    let material_center = Rc::new(Lambertain::new(Color::new(0.1, 0.2, 0.5)));
+    let material_left = Rc::new(Dielectric::new(1.5));
+    let material_right = Rc::new(Metal::new(Color::new(0.8, 0.6, 0.2), 0.0));
 
     let world: Vec<Box<dyn Hittable>> = vec![
         Box::new(Sphere::new(

@@ -37,9 +37,9 @@ impl Hittable for Sphere {
         }
         let sqrtd = discriminant.sqrt();
 
-        let root = (-half_b - sqrtd) / a;
+        let mut root = (-half_b - sqrtd) / a;
         if !ray_t.surronds(root) {
-            let root = (-half_b + sqrtd) / a;
+            root = (-half_b + sqrtd) / a;
             if !ray_t.surronds(root) {
                 return None;
             }
