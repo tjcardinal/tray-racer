@@ -36,6 +36,11 @@ fn main() {
         Box::new(Sphere::new(
             Point3::new(-1.0, 0.0, -1.0),
             0.5,
+            material_left.clone(),
+        )),
+        Box::new(Sphere::new(
+            Point3::new(-1.0, 0.0, -1.0),
+            -0.4,
             material_left,
         )),
         Box::new(Sphere::new(
