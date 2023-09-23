@@ -7,14 +7,14 @@ mod ray;
 mod sphere;
 mod vec3;
 
-use std::rc::Rc;
+use std::{f64::consts::PI, rc::Rc};
 
 use camera::Camera;
 use color::Color;
 use hittable::Hittable;
 use material::{Dielectric, Lambertain, Material, Metal};
 use sphere::Sphere;
-use vec3::Point3;
+use vec3::{Point3, Vec3};
 
 fn main() {
     let material_ground = Rc::new(Lambertain::new(Color::new(0.8, 0.8, 0.0)));
@@ -55,6 +55,11 @@ fn main() {
     cam.width = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth = 50;
+
+    cam.vfov = 20.0;
+    cam.lookfrom = Point3::new(-2.0, 2.0, 1.0);
+    cam.lookat = Point3::new(0.0, 0.0, -1.0);
+    cam.vup = Vec3::new(0.0, 1.0, 0.0);
 
     cam.render(&world);
 }
