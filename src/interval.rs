@@ -8,7 +8,7 @@ impl Interval {
         Self { min, max }
     }
 
-    pub fn surronds(&self, x: f64) -> bool {
+    pub fn surrounds(&self, x: f64) -> bool {
         self.min < x && x < self.max
     }
 
