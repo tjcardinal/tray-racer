@@ -8,7 +8,7 @@ mod sphere;
 mod vec3;
 
 use rand::Rng;
-use std::{f64::consts::PI, rc::Rc};
+use std::rc::Rc;
 
 use camera::Camera;
 use color::Color;
@@ -45,7 +45,7 @@ fn main() {
                         let fuzz = rand::thread_rng().gen_range(0.5..1.0);
                         Rc::new(Metal::new(albedo, fuzz))
                     }
-                    x => Rc::new(Dielectric::new(1.5)),
+                    _ => Rc::new(Dielectric::new(1.5)),
                 };
                 world.push(Box::new(Sphere::new(center, 0.2, material)));
             }
@@ -75,8 +75,8 @@ fn main() {
 
     let mut cam = Camera::new();
     cam.aspect_ratio = 16.0 / 9.0;
-    cam.width = 600;
-    cam.samples_per_pixel = 50;
+    cam.width = 1200;
+    cam.samples_per_pixel = 10;
     cam.max_depth = 50;
 
     cam.vfov = 20.0;

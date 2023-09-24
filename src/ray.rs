@@ -15,16 +15,3 @@ impl Ray {
         self.origin + t * self.direction
     }
 }
-
-fn hit_sphere(center: Point3, radius: f64, r: &Ray) -> Option<f64> {
-    let oc = r.origin - center;
-    let a = r.direction.length_squared();
-    let half_b = oc.dot(r.direction);
-    let c = oc.length_squared() - radius.powi(2);
-    let discriminant = half_b.powi(2) - a * c;
-    if discriminant < 0.0 {
-        None
-    } else {
-        Some((-half_b - discriminant.sqrt()) / a)
-    }
-}
