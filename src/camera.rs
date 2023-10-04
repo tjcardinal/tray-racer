@@ -1,3 +1,5 @@
+use rayon::prelude::*;
+
 use crate::{
     color::{self, Color},
     hittable::Hittable,
@@ -54,17 +56,24 @@ impl Camera {
 
         println!("P3\n{} {}\n255", self.width, self.height);
 
-        for y in 0..self.height {
-            eprintln!("Scanlines remaining :{}", self.height - y);
-            for x in 0..self.width {
-                let mut pixel_color = Color::new(0.0, 0.0, 0.0);
+        let mut pixels =
+            vec![Color::new(0.0, 0.0, 0.0); self.width as usize * self.height as usize];
+        pixels
+            .par_iter_mut()
+            .enumerate()
+            .for_each(|(idx, pixel_color)| {
                 for _ in 0..self.samples_per_pixel {
+                    let x = idx as i32 % self.width;
+                    let y = idx as i32 / self.width;
                     let r = self.get_ray(x, y);
-                    pixel_color = pixel_color + Self::ray_color(&r, self.max_depth, world);
+                    *pixel_color = *pixel_color + Self::ray_color(&r, self.max_depth, world);
                 }
-                color::write_color(pixel_color, self.samples_per_pixel);
-            }
+            });
+
+        for pixel_color in pixels {
+            color::write_color(pixel_color, self.samples_per_pixel);
         }
+
         eprintln!("Done");
     }
 
