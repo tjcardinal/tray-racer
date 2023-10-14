@@ -1,17 +1,21 @@
-use std::rc::Rc;
-
 use crate::{interval::Interval, material::Material, ray::Ray, vec3::Point3, vec3::Vec3};
 
-pub struct HitRecord {
+pub struct HitRecord<'a> {
     pub p: Point3,
     pub normal: Vec3,
-    pub mat: Rc<dyn Material>,
+    pub mat: &'a dyn Material,
     pub t: f64,
     pub front_face: bool,
 }
 
-impl HitRecord {
-    pub fn new(p: Point3, t: f64, r: &Ray, outward_normal: Vec3, mat: Rc<dyn Material>) -> Self {
+impl<'a> HitRecord<'a> {
+    pub fn new(
+        p: Point3,
+        t: f64,
+        r: &Ray,
+        outward_normal: Vec3,
+        mat: &'a dyn Material,
+    ) -> HitRecord<'a> {
         let front_face = r.direction.dot(outward_normal) < 0.0;
 
         Self {
@@ -32,7 +36,7 @@ pub trait Hittable: Sync + Send {
     fn hit(&self, r: &Ray, ray_t: Interval) -> Option<HitRecord>;
 }
 
-impl Hittable for Vec<Box<dyn Hittable>> {
+impl Hittable for Vec<&(dyn Hittable + '_)> {
     fn hit(&self, r: &Ray, ray_t: Interval) -> Option<HitRecord> {
         self.iter()
             .fold((None, ray_t.max), |(rec, closest), item| {

@@ -1,5 +1,3 @@
-use std::rc::Rc;
-
 use crate::{
     hittable::{HitRecord, Hittable},
     interval::Interval,
@@ -8,14 +6,14 @@ use crate::{
     vec3::Point3,
 };
 
-pub struct Sphere {
+pub struct Sphere<'a> {
     center: Point3,
     radius: f64,
-    mat: Rc<dyn Material>,
+    mat: &'a (dyn Material + Send + Sync),
 }
 
-impl Sphere {
-    pub fn new(center: Point3, radius: f64, mat: Rc<dyn Material>) -> Self {
+impl<'a> Sphere<'a> {
+    pub fn new(center: Point3, radius: f64, mat: &'a (dyn Material + Send + Sync)) -> Self {
         Self {
             center,
             radius,
@@ -24,10 +22,7 @@ impl Sphere {
     }
 }
 
-unsafe impl Send for Sphere {}
-unsafe impl Sync for Sphere {}
-
-impl Hittable for Sphere {
+impl Hittable for Sphere<'_> {
     fn hit(&self, r: &Ray, ray_t: Interval) -> Option<HitRecord> {
         let oc = r.origin - self.center;
         let a = r.direction.length_squared();
@@ -50,12 +45,6 @@ impl Hittable for Sphere {
 
         let point = r.at(root);
         let outward_normal = (point - self.center) / self.radius;
-        Some(HitRecord::new(
-            point,
-            root,
-            r,
-            outward_normal,
-            self.mat.clone(),
-        ))
+        Some(HitRecord::new(point, root, r, outward_normal, self.mat))
     }
 }
