@@ -38,16 +38,15 @@ pub trait Hittable: Sync + Send {
 
 impl Hittable for Vec<&(dyn Hittable + '_)> {
     fn hit(&self, r: &Ray, ray_t: Interval) -> Option<HitRecord> {
-        self.iter()
-            .fold((None, ray_t.max), |(rec, closest), item| {
-                let interval = Interval::new(ray_t.min, closest);
-                if let Some(rec) = item.hit(r, interval) {
-                    let t = rec.t;
-                    (Some(rec), t)
-                } else {
-                    (rec, closest)
-                }
-            })
-            .0
+        let mut closest_t = ray_t.max;
+        let mut closest_hit = None;
+        for hittable in self {
+            let interval = Interval::new(ray_t.min, closest_t);
+            if let Some(rec) = hittable.hit(r, interval) {
+                closest_t = rec.t;
+                closest_hit = Some(rec);
+            }
+        }
+        closest_hit
     }
 }

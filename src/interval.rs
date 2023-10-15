@@ -5,6 +5,7 @@ pub struct Interval {
 
 impl Interval {
     pub fn new(min: f64, max: f64) -> Self {
+        assert!(min < max);
         Self { min, max }
     }
 

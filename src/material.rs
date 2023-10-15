@@ -4,6 +4,12 @@ pub trait Material {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)>;
 }
 
+pub enum MaterialEnum {
+    Lambertain(Lambertain),
+    Metal(Metal),
+    Dielectric(Dielectric),
+}
+
 pub struct Lambertain {
     pub albedo: Color,
 }
