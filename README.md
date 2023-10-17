@@ -7,5 +7,8 @@ Lines remaining output: Pixels are calculated in parallel rather than line by li
 # Additional Features
 Parallelism: Individuals are calculated in parallel using Rayon.
 
+# Installation
+cargo run --release > spheres.ppm
+
 # Examples
 ![Spheres](spheres.ppm)
