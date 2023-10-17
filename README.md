@@ -11,4 +11,4 @@ Parallelism: Individuals are calculated in parallel using Rayon.
 cargo run --release > spheres.ppm
 
 # Examples
-![Spheres](spheres.ppm)
+![Spheres](spheres.png)
