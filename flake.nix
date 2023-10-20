@@ -14,13 +14,6 @@
 	  clippy
 	  rustc 
 	  rustfmt
-	  (vscode-with-extensions.override {
-	    vscode = vscodium;
-	    vscodeExtensions = with vscode-extensions; [
-	      asvetliakov.vscode-neovim
-	      rust-lang.rust-analyzer
-	    ];
-	  })
 	]; };
     };
 }
