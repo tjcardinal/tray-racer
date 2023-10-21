@@ -7,13 +7,17 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-    in {
+    in
+    {
+      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
       devShells.${system}.default =
-        pkgs.mkShell { buildInputs = with pkgs; [
-	  cargo
-	  clippy
-	  rustc 
-	  rustfmt
-	]; };
+        pkgs.mkShell {
+          buildInputs = with pkgs; [
+            cargo
+            clippy
+            rustc
+            rustfmt
+          ];
+        };
     };
 }
